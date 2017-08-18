@@ -1,0 +1,29 @@
+
+//create customer_hive table on hbase on customer
+create external table customer_hive
+    > (id int,name String,location String,age int)
+    > STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+    > with serdeproperties
+    > ("hbase.columns.mapping"=":key,details:name,details:location,details:age")
+    > tblproperties("hbase.table.name"="customer");
+
+//calculating maximum and minimum age
+select max(age),min(age) from customer_hive;
+
+
+//Accessing the hbase table from pig
+
+data = LOAD 'hbase://customer' USING
+>> org.apache.pig.backend.hadoop.hbase.HBaseStorage('details:*', '-loadKey true')
+>>  as(id:int,details:MAP[]);
+
+A = foreach data generate id,details#'name',details#'location',details#'age';
+B = foreach A generate $0,$1,$2,(int)$3;
+C= order B by $3 desc;
+D = LIMIT C 1;//for max
+dump D;
+
+C= order B by $3 ;
+D = LIMIT C 1;//for minimum
+dump D;
+

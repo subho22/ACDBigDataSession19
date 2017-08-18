@@ -1,0 +1,27 @@
+1) scan 'customer',{FILTER=>"SingleColumnValueFilter('details','location',=,'binaryprefix:AUS')"}
+
+Output//
+
+ROW                   COLUMN+CELL                                               
+ 3                    column=details:age, timestamp=1498885191088, value=26     
+ 3                    column=details:location, timestamp=1498885191088, value=AU
+                      S                                                         
+ 3                    column=details:name, timestamp=1498885191088, value=Rohit 
+
+2)Output:
+
+[acadgild@localhost gen-py]$ python table.py
+['clicks', 'customer', 'subhajit']
+
+//from hbase shell
+hbase(main):002:0> list
+TABLE                                                                           
+clicks                                                                          
+customer                                                                        
+subhajit                                                                        
+3 row(s) in 0.4340 seconds
+
+=> ["clicks", "customer", "subhajit"]
+
+
+
